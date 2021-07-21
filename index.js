@@ -30,8 +30,10 @@ const readGeneData = (geneDataPath) => {
           log2fc, //: Number(),
           changeIntensity: Number(rpkm) * Number(log2fc),
         };
-
-        result.push(lineData);
+        if(fdr<0.05){
+          result.push(lineData);
+        };
+        //result.push(lineData);
       });
       s.on("finish", () => {
         console.timeEnd("read gene data");
