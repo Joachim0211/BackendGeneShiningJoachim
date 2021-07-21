@@ -28,12 +28,14 @@ const readGeneData = (geneDataPath) => {
           rpkm, //: //parseInt(intensity, 10),
           fdr,
           log2fc, //: Number(),
+          changeIntensity: Number(rpkm) * Number(log2fc),
         };
-        
+
         result.push(lineData);
       });
       s.on("finish", () => {
         console.timeEnd("read gene data");
+        result.sort(compare);
         resolve(result);
       });
       inputFile.pipe(s);
@@ -43,13 +45,39 @@ const readGeneData = (geneDataPath) => {
   });
 };
 
-readGeneData("txtFiles/fiveDayKdepl.txt")
-  .then(
-    (data) => fs.writeFile("./Mock-data/fiveDayKdepl.json",  JSON.stringify(data), function(err) {
-    if (err) {
-        console.log(err);
-    }
-    console.log(data)
-    })
-    ) 
+function compare(a, b) {
+  if (Math.abs(a.changeIntensity) > Math.abs(b.changeIntensity)) {
+    return -1;
+  }
+  if (Math.abs(a.changeIntensity) < Math.abs(b.changeIntensity)) {
+    return 1;
+  }
+  // a must be equal to b
+  return 0;
+}
+
+readGeneData("txtFiles/Kdeficiency.txt")
+  .then((data) => {
+    fs.writeFile(
+      "./Mock-data/Kdeficiency.json",
+      JSON.stringify(data),
+      function (err) {
+        if (err) {
+          console.log(err);
+        }
+        console.log(data);
+      }
+    );
+
+    fs.writeFile(
+      "./Mock-data/Kdeficiency-top100.json",
+      JSON.stringify(data.slice(0, 100)),
+      function (err) {
+        if (err) {
+          console.log(err);
+        }
+        console.log(data);
+      }
+    );
+  })
   .catch((e) => console.log(e.message));
