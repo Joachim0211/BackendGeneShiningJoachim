@@ -6,6 +6,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.static(__dirname + "/public"));
+app.use("/numbers", require("./routes/numbersRoute"))
 
 app.post(
   "/submit-gene-data",
@@ -22,27 +23,40 @@ app.post(
     //     size: 3730781
     //   }
     console.log(req.file);
+    try {
     const rawJsonData = await readGeneData(req.file.path);
     const pathToJsonFile = await writeGeneData(rawJsonData, req.file);
-    console.log(pathToJsonFile);
-
+    console.log(pathToJsonFile);    
     // console.log(rawJsonData);
     res.json({
       status: 200,
       message: "success!",
     });
+    } catch (error) {
+      console.log({error})
+      res.json(error)
+    }
+    
+
+
   }
 );
 
-app.post("/something", (req, res) => {
-  res.send("what");
+//here the calculated data will be send in a json format, at the moment in the most simple way 
+// just one 'potassium number'
+
+app.post("/oaresults", (req, res) => {
+  res.json({
+    potassiumNumbers: ['number 1', 'number 2'] 
+  });
 });
 
 app.get("/", (req, res) => {
-  res.send("Gene shining");
+  console.log(req)
+  res.send("<h1>Welcome to GeneShining Backend - where the submited files will be analysed!</h1>");
 });
 
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3001;
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
