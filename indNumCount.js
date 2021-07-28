@@ -5,6 +5,7 @@ const healthy = "healthyPlants.json";
 const indicatorGenes = "orderedKdefused300.json"
 const deficiency = "Kdefused.json";
 const regexK = new RegExp('potassium', "i");
+const regexInf = new RegExp('#0ME?', "i");
 const treatments = [healthy, oned, twod, fived];
 let indNumT = 300;
 let indNumP = 0;
@@ -15,6 +16,9 @@ let fdrNumPC = 0;
 let namNumT = 0;
 let namNumP = 0;
 let namNumPC = 0;
+let infNumT = 0;
+let infNumP = 0;
+let infNumPC = 0;
 
 
 
@@ -26,16 +30,23 @@ for(let k = 0; k < treatments.length; k++) {
     let fdrNumP = 0;
     let namNumT = 0;
     let namNumP = 0;
+    let infNumT = 0;
+    let infNumP = 0;
+    
+
 
 
     fdrNumT+= fileC.filter(element => element.fdr<=0.05).length;
     namNumT+= fileC.filter(element => element.fdr <= 0.1 && regexK.test(element.biofunct)).length;
     namNumP+= fileA.filter(element => element.fdr <= 0.1 && regexK.test(element.biofunct)).length;
-
+    infNumT+= fileC.filter(element => element.rpkm >= 1 && regexInf.test(element.log2fc)).length;
+    infNumP+= fileA.filter(element => element.rpkm >= 0.5 && regexInf.test(element.log2fc)).length;
     // for(let j = 0; j < fileC.length; j++){
     //     let objC = fileC[j];
-    //     if (Number(objC.fdr) <= 0.05){
-    //         fdrNumT++;
+    //     let regexInf = new RegExp('Inf', "i");
+    //     if (regexInf.test(objC.log2fc)){
+    //         console.log(Number(objC.rpkm))
+    //         console.log(objC.log2fc)
     //         }
     // } 
     
@@ -55,18 +66,18 @@ for(let k = 0; k < treatments.length; k++) {
                 fdrNumP++;
                 }
             }
-            
-            
         } 
     }
 indNumPC=indNumP*100/indNumT;
 fdrNumPC=fdrNumP*100/fdrNumT;
 namNumPC=namNumP*100/namNumT;
+infNumPC=infNumP*100/infNumT;
 
-console.log(namNumT)
-console.log(namNumP)
+console.log(infNumT)
+console.log(infNumP)
 console.log(indNumPC.toFixed(2));
 console.log(fdrNumPC.toFixed(2));
 console.log(namNumPC.toFixed(2));
+console.log(infNumPC.toFixed(2));
 console.log("___________________");
 };
