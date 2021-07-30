@@ -3,7 +3,10 @@
 
 
 exports.list = (req, res) =>{
-    res.json({
-        numbersList: ['number a', 'number b']
-    })
+    
+    const newLocal = {
+        numbersList: ['40', '12']
+    }
+    //console.log(newLocal)
+    res.json(newLocal)
 }

@@ -19,10 +19,13 @@ let namNumPC = 0;
 let infNumT = 0;
 let infNumP = 0;
 let infNumPC = 0;
-
-
-
-for(let k = 0; k < treatments.length; k++) {
+let highNumPC = 0;
+let timeCounter = 0;
+let diffToDisease=0;
+let candNumTC = 0;
+let candNumTA = 0;
+    
+    for(let k = 0; k < treatments.length; k++) {
     const fileA = require("./Mock-data/" + treatments[k]);
     const fileB = require("./Mock-data/" + indicatorGenes);
     const fileC = require("./Mock-data/" + deficiency);   
@@ -32,26 +35,54 @@ for(let k = 0; k < treatments.length; k++) {
     let namNumP = 0;
     let infNumT = 0;
     let infNumP = 0;
-    
+    let highNumT = 0;
+    let highNumP = 0;
+    let candNumTC = 0;
+    let candNumTA = 0;
+    let diffToDisease=0;
 
 
+    candNumTC += fileC.filter(element => element.fdr<=0.05 && element.rpkm>1 ).length;
+    candNumTA += fileA.filter(element => element.fdr<=0.05 && element.rpkm>1).length;
 
     fdrNumT+= fileC.filter(element => element.fdr<=0.05).length;
     namNumT+= fileC.filter(element => element.fdr <= 0.1 && regexK.test(element.biofunct)).length;
     namNumP+= fileA.filter(element => element.fdr <= 0.1 && regexK.test(element.biofunct)).length;
-    infNumT+= fileC.filter(element => element.rpkm >= 1 && regexInf.test(element.log2fc)).length;
-    infNumP+= fileA.filter(element => element.rpkm >= 0.5 && regexInf.test(element.log2fc)).length;
-    // for(let j = 0; j < fileC.length; j++){
-    //     let objC = fileC[j];
-    //     let regexInf = new RegExp('Inf', "i");
-    //     if (regexInf.test(objC.log2fc)){
-    //         console.log(Number(objC.rpkm))
-    //         console.log(objC.log2fc)
-    //         }
-    // } 
-    
-    
+    //infNumT+= fileC.filter(element => element.rpkm >= 1 && regexInf.test(element.log2fc)).length;
+    //infNumP+= fileA.filter(element => element.rpkm >= 1 && regexInf.test(element.log2fc)).length;
 
+    //caculation of commonly newly expressed genes
+    for(let j = 0; j < fileC.length; j++){
+        let objC = fileC[j];
+        
+        if (regexInf.test(objC.log2fc) && objC.rpkm >= 0.3){
+            infNumT++;
+            for(let f = 0; f < fileA.length; f++){
+                let objA = fileA[f];
+                if(regexInf.test(objA.log2fc) && objA.rpkm >= 0.3 && objA.id===objC.id){
+                    infNumP++;
+                }
+            }
+        }
+    } 
+
+    //calculation of commonly highly very highly expressed and upregulated genes
+    for(let jj = 0; jj < fileC.length; jj++){
+        let objC = fileC[jj];
+        
+        if (objC.rpkm >=500 && objC.fdr <= 0.1 && Number(objC.log2fc)>0){
+            highNumT++;
+            for(let ff = 0; ff < fileA.length; ff++){
+                let objA = fileA[ff];
+                if(objA.rpkm >=500 && objA.fdr <= 0.1 && Number(objA.log2fc)>0 && objC.id===objA.id){
+                    highNumP++;
+                    console.log(objA);
+                }
+            }
+        }
+    } 
+    
+    
     for(let i = 0; i < fileA.length; i++) {
         let objA = fileA[i];
         if(Number(objA.fdr) <= 0.05){ 
@@ -68,16 +99,36 @@ for(let k = 0; k < treatments.length; k++) {
             }
         } 
     }
+
+    for(let iii = 0; iii < fileA.length; iii++) {
+        let objA = fileA[iii];
+        timeCounter++;
+           for(let jjj = 0; jjj < fileC.length; jjj++){
+                let objC = fileC[jjj];
+                
+                if (objA.id === objC.id && Math.abs(Number(objC.fdr)-Number(objA.fdr)) > 0.4){
+                    diffToDisease++;
+                }
+            }
+        } 
+    
+
+
+
 indNumPC=indNumP*100/indNumT;
 fdrNumPC=fdrNumP*100/fdrNumT;
 namNumPC=namNumP*100/namNumT;
 infNumPC=infNumP*100/infNumT;
+highNumPC=highNumP*100/highNumT;
 
-console.log(infNumT)
-console.log(infNumP)
+console.log(timeCounter);
+console.log(diffToDisease);
+console.log(candNumTC);
+console.log(candNumTA);
 console.log(indNumPC.toFixed(2));
 console.log(fdrNumPC.toFixed(2));
 console.log(namNumPC.toFixed(2));
 console.log(infNumPC.toFixed(2));
+console.log(highNumPC.toFixed(2));
 console.log("___________________");
 };
