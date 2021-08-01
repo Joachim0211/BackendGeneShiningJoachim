@@ -5,7 +5,7 @@
 exports.list = (req, res) =>{
     
     const newLocal = {
-        numbersList: ['40', '12']
+        numbersList: ['100', '12']
     }
     //console.log(newLocal)
     res.json(newLocal)
