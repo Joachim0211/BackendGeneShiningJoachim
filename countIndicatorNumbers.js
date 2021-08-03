@@ -6,7 +6,7 @@ const indicatorGenes = "orderedKdefused300.json"
 const deficiency = "Kdefused.json";
 const regexK = new RegExp('potassium', "i");
 const regexInf = new RegExp('#0ME?', "i");
-const treatments = [healthy, oned];
+const treatments = [healthy];
 
 
 const countIndicatorNumbers = (pathToJsonFile) => {
