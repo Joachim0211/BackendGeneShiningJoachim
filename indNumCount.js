@@ -65,7 +65,7 @@ let candNumTA = 0;
             }
         }
     } 
-
+-
     //calculation of commonly highly very highly expressed and upregulated genes
     for(let jj = 0; jj < fileC.length; jj++){
         let objC = fileC[jj];

@@ -1,8 +1,12 @@
 const express = require("express");
 const upload = require("./fileUploader");
 const { readGeneData, writeGeneData } = require("./geneData");
+const countIndicatorNumbers = require('./countIndicatorNumbers')
+const cors = require('cors');
 
 const app = express();
+app.use(cors())
+
 
 app.use(express.json());
 app.use(express.static(__dirname + "/public"));
@@ -26,12 +30,11 @@ app.post(
     try {
     const rawJsonData = await readGeneData(req.file.path);
     const pathToJsonFile = await writeGeneData(rawJsonData, req.file);
-    console.log(pathToJsonFile);    
+    const analysisResult = await countIndicatorNumbers(pathToJsonFile)
+
+    console.log(analysisResult);    
     // console.log(rawJsonData);
-    res.json({
-      status: 200,
-      message: "success!",
-    });
+    res.json(analysisResult);
     } catch (error) {
       console.log({error})
       res.json(error)

@@ -1,4 +1,0 @@
-Solyc00g005000.3.1	Eukaryotic aspartyl protease family protein (AHRD V3.3 *** AT3G20015.1)	1377	0	0	0
-Solyc00g005040.3.1	Potassium channel (AHRD V3.3 *-* D0EM91_9ROSI)	357	0.1	0.9564	0
-Solyc00g005050.3.1	UPF0664 stress-induced protein C29B12.11c (AHRD V3.3 *** A0A151ST26_CAJCA)	588	96.1	0.1885	0.6
-Solyc00g005060.1.1	LOW QUALITY:Cyclin/Brf1-like TBP-binding protein (AHRD V3.3 --* AT2G01280.3)	273	0	0	0
